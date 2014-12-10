@@ -9,7 +9,8 @@ var ProductSchema = new mongoose.Schema({
     moments: [Number],
     brand: String,
     ings: [String],
-    values: Number
+    values: Number,
+    owner: [mongoose.Schema.Types.ObjectId]
 });
 
 var Product = mongoose.model('Product', ProductSchema);

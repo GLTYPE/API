@@ -4,6 +4,7 @@ var mongoose = require("mongoose");
 var MomentSchema = new mongoose.Schema({
     name: String,
     owner_id: mongoose.Schema.Types.ObjectId,
+    target_id: mongoose.Schema.Types.ObjectId,
     date: Date,
     description: String
 });

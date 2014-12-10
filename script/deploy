@@ -1,0 +1,2 @@
+sudo ssh -i GLTYPE.pem ubuntu@ec2-54-77-212-173.eu-west-1.compute.amazonaws.com
+cd ~/

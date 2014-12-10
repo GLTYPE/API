@@ -1,5 +1,6 @@
 // INGREDIENT MODEL
-var mongoose = require("mongoose");
+var mongoose = require("mongoose"),
+uniqueValidator = require('mongoose-unique-validator');
 
 var IngredientSchema = new mongoose.Schema({
     name: {type: String, unique: true},
@@ -8,8 +9,11 @@ var IngredientSchema = new mongoose.Schema({
     rate: [{ rateNumber: Number, rateValue : Number }],
     moments: [mongoose.Schema.Types.ObjectId],
     faith: [String],
-    values: Number
+    values: Number,
+    owner: [mongoose.Schema.Types.ObjectId]
 });
+
+IngredientSchema.plugin(uniqueValidator);
 
 var Ingredient = mongoose.model('Ingredient', IngredientSchema);
 

@@ -4,11 +4,21 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-	"express": "*",
-	"mongoose": "*",
-	"body-parser": "*",
-	"connect-mongo" : "*",
-	"MD5" : "*",
-	"mocha" : "*"
-  }
+        "express": "*",
+        "mongoose": "*",
+        "mongoose-unique-validator":"*",
+        "body-parser": "*",
+        "connect-mongo" : "*",
+        "MD5" : "*",
+        "rand-token": "*",
+        "cors": "*",
+        "chai": "*",
+        "should": "*",
+        "supertest": "*",
+        "winston": "*",
+        "mocha" : "*"
+    },
+    "scripts": {
+	    "test": "make test"
+    }    
 }

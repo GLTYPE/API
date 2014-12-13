@@ -26,32 +26,32 @@ describe('Editing account', function () {
             }).save(function (err, user) {
                 if (err) throw err;
                 idUser2 = user._id;
-            });
-            User({
-                firstname: "Pierre",
-                lastname: "Medard",
-                email: "medard@gmail.com",
-                about: "",
-                role: 1,
-                password: md5("00000000")
-            }).save(function (err, user) {
-                if (err) throw err;
-                var account = {
+                User({
+                    firstname: "Pierre",
+                    lastname: "Medard",
                     email: "medard@gmail.com",
-                    password: '00000000'
-                };
-                request(url)
-                    .post('/users/connect')
-                    .type('json')
-                    .send(JSON.stringify(account))
-                    .end(function (err, res) {
-                        if (err) {
-                            throw err;
-                        }
-                        token = JSON.parse(res.text);
-                        idUser = user._id;
-                        done();
-                    });
+                    about: "",
+                    role: 1,
+                    password: md5("00000000")
+                }).save(function (err, user) {
+                    if (err) throw err;
+                    var account = {
+                        email: "medard@gmail.com",
+                        password: '00000000'
+                    };
+                    request(url)
+                        .post('/users/connect')
+                        .type('json')
+                        .send(JSON.stringify(account))
+                        .end(function (err, res) {
+                            if (err) {
+                                throw err;
+                            }
+                            token = JSON.parse(res.text);
+                            idUser = user._id;
+                            done();
+                        });
+                });
             });
         });
     })

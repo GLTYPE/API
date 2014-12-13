@@ -10,7 +10,7 @@ var IngredientSchema = new mongoose.Schema({
     moments: [mongoose.Schema.Types.ObjectId],
     faith: [String],
     values: Number,
-    owner: [mongoose.Schema.Types.ObjectId]
+    owner: mongoose.Schema.Types.ObjectId
 });
 
 IngredientSchema.plugin(uniqueValidator);

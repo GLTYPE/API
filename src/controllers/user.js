@@ -22,6 +22,7 @@ exports.createUser = function createUser(req, res) {
     User({
         firstname: req.body.firstname,
         lastname: req.body.lastname,
+        picture: req.body.picture ? req.body.picture : "",
         email: req.body.email,
         about: req.body.about ? req.body.about : "",
         role: req.body.role,
@@ -78,12 +79,26 @@ exports.getUserByName = function getUserByName(req, res) {
 }
 
 exports.editUser = function editUser(req, res) {
+    if (!req.body.firstname || req.body.firstname.length == 0 ||
+        req.body.firstname.length > 50)
+        return res.status(400).end("Error firstname (Caracter number must be between 1 and 50)");
+    if (!req.body.lastname || req.body.lastname.length == 0 ||
+        req.body.lastname.length > 50)
+        return res.status(400).end("Error lastname (Caracter number must be between 1 and 50)");
+    if (!req.body.email || req.body.email.length == 0 ||
+        req.body.email.length > 50)
+        return res.status(400).end("Error email (Caracter number must be between 1 and 50)");
+    if (!req.body.role || parseInt(req.body.role) < 0 || parseInt(req.body.role) > 3)
+        return res.status(400).end("Error role");
+    if (!req.body.password || req.body.password.length < 8 ||
+        req.body.password.length > 20)
+        return res.status(400).end("Error password (Caracter number must be between 8 and 20)");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        user.lastname = req.body.lastname ? req.body.lastname : user.lastname;
-        user.firstname = req.body.firstname ? req.body.firstname : user.firstname;
-        user.picture = req.body.picture ? req.body.picture : user.picture;
-        user.about = req.body.about ? req.body.about : user.about;
-        user.email = req.body.email ? req.body.email : user.email;
+        user.lastname = req.body.lastname;
+        user.firstname = req.body.firstname;
+        user.picture = req.body.picture;
+        user.about = req.body.about;
+        user.email = req.body.email;
         user.save(function (err) {
             if (err) {
                 if (err.errors.email.message) return res.status(400).end("Email already used")
@@ -100,6 +115,15 @@ exports.connect = function connect(req, res) {
         if (err) {
             console.log(err);
             return res.status(400).send("Internal error");
+        }
+        if (!user) {
+            console.log("Fail : Il essai de se co avec : " + req.body.email + " - " + req.body.password)
+            User.find(function(err, myusers) {
+                myusers.forEach(function(myuser) {
+                    console.log(myuser);
+                })
+            })
+            return res.status(400).end("User not found")
         }
         if (user.password === md5(req.body.password)) {
             AccessToken.createAccessToken(user._id, function (err, token) {

@@ -8,7 +8,6 @@ var User = require('../../src/models/user.js').User;
 
 describe('Getting account', function () {
     var url = 'http://localhost:4242';
-    var token = "";
     var idUser = 0;
     var idUser2 = 0;
 
@@ -26,32 +25,18 @@ describe('Getting account', function () {
             }).save(function (err, user) {
                 if (err) throw err;
                 idUser2 = user._id;
-            });
-            User({
-                firstname: "Pierre",
-                lastname: "Medard",
-                email: "medard@gmail.com",
-                about: "",
-                role: 1,
-                password: md5("00000000")
-            }).save(function (err, user) {
-                if (err) throw err;
-                var account = {
+                User({
+                    firstname: "Pierre",
+                    lastname: "Medard",
                     email: "medard@gmail.com",
-                    password: '00000000'
-                };
-                request(url)
-                    .post('/users/connect')
-                    .type('json')
-                    .send(JSON.stringify(account))
-                    .end(function (err, res) {
-                        if (err) {
-                            throw err;
-                        }
-                        token = JSON.parse(res.text);
-                        idUser = user._id;
-                        done();
-                    });
+                    about: "",
+                    role: 1,
+                    password: md5("00000000")
+                }).save(function (err, user) {
+                    if (err) throw err;
+                    idUser = user._id;
+                    done()
+                });
             });
         });
     })

@@ -13,7 +13,6 @@ exports.createReceipe = function createReceipe(req, res) {
             name: req.body.name ? req.body.name : "",
             picture: req.body.picture ? req.body.picture : "",
             description: req.body.description ? req.body.description : "",
-            brand: req.body.brand ? req.body.brand : "",
             ings: typeof(req.body.ings) == 'object' ? req.body.ings : [""],
             value: req.body.value ? req.body.value : "",
             owner: req.body.userId
@@ -74,6 +73,8 @@ exports.getReceipeByCriteria = function getReceipeByCriteria(req, res) {
 }
 
 exports.editReceipe = function editReceipe(req, res) {
+    if (!req.body.name || req.body.name.length == 0)
+        return res.status(400).end("Ingredient name missing.");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         if (user.role == 3 || user.role == 4)
             return res.status(401).end();

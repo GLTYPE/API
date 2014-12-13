@@ -76,6 +76,16 @@ exports.getMomentByTargetId = function GetMomentByTargetId(req, res) {
 }
 
 exports.editMoment = function editMoment(req, res) {
+    if (!req.body.name || req.body.name.length == 0)
+        return res.status(400).end("name missing.");
+    if (!req.body.owner_id)
+        return res.status(400).end("ownder_id missing.");
+    if (!req.body.target_id)
+        return res.status(400).end("target_id missing.");
+    if (!req.body.date || req.body.date.length == 0)
+        return res.status(400).end("date missing.");
+    if (!req.body.description || req.body.description.length == 0)
+        return res.status(400).end("description missing.");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         Moment.findById(req.params.id, function (err, mom) {
             if (err) {

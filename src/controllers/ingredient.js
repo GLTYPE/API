@@ -7,15 +7,15 @@ var Ingredient = require('../models/ingredient.js').Ingredient,
 exports.createIngredient = function createIngredient(req, res) {
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         if (user.role == 1 || user.role == 2)
-            return res.status(401).end();
+            return res.status(401).end("Not a gastronomist");
         if (!req.body.name || req.body.name.length == 0)
-            return res.status(400).end("Ingredient name missing.");
+            return res.status(400).end("name missing");
         Ingredient({
             name: req.body.name,
             picture: req.body.picture ? req.body.picture : "",
             description: req.body.description ? req.body.description : "",
             faith: req.body.faith ? req.body.faith : "",
-            value: req.body.value ? req.body.value : "",
+            values: req.body.values ? req.body.values : 0,
             owner: user._id
         }).save(function (err, ing) {
             if (err) {
@@ -65,7 +65,7 @@ exports.getIngredientValues = function GetIngredientValues(req, res) {
             console.log(err);
             return res.status(500).send("Internal error");
         }
-        res.status(200).send(ingredient.value.toString());
+        res.status(200).send(ingredient.values.toString());
     });
 }
 
@@ -82,20 +82,22 @@ exports.getIngredientByCriteria = function getIngredientByCriteria(req, res) {
 }
 
 exports.editIngredient = function editIngredient(req, res) {
+    if (!req.body.name || req.body.name.length == 0)
+        return res.status(400).end("name missing");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         if (user.role == 1 || user.role == 2)
-            return res.status(401).end();
+            return res.status(401).end("Not a gastronomist");
         Ingredient.findById(req.params.id, function (err, ing) {
             if (err) {
                 if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
-            ing.name = req.body.name ? ing.name : req.body.name;
-            ing.picture = req.body.picture ? ing.picture : req.body.picture;
-            ing.description = req.body.description ? ing.description : req.body.description;
-            ing.faith = req.body.faith ? ing.faith : req.body.faith;
-            ing.values = req.body.values ? ing.values : req.body.values;
+            ing.name = req.body.name;
+            ing.picture = req.body.picture ? req.body.picture : ing.picture;
+            ing.description = req.body.description ? req.body.description : ing.description;
+            ing.faith = req.body.faith ? req.body.faith: ing.faith;
+            ing.values = req.body.values ? req.body.values : ing.values;
             ing.save(function (err, ing) {
                 if (err) {
                     if (err.errors.name.message) return res.status(400).end("Name already used")

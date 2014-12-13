@@ -2,7 +2,10 @@
 var express = require("express"),
 bodyParser = require('body-parser'),
 app = express(),
-mongoose = require('mongoose');
+mongoose = require('mongoose'),
+cors = require('cors');
+
+app.use(cors());
 
 // Receive post variable
 app.use(bodyParser.json());

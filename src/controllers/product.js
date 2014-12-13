@@ -83,6 +83,8 @@ exports.getProductByCriteria = function getProductByCriteria(req, res) {
 }
 
 exports.editProduct = function editProduct(req, res) {
+    if (!req.body.name || req.body.name.length == 0)
+        return res.status(400).end("Ingredient name missing.");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         if (user.role == 2 || user.role == 4)
             return res.status(401).end();

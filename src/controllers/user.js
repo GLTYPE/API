@@ -14,7 +14,7 @@ exports.createUser = function createUser(req, res) {
     if (!req.body.email || req.body.email.length == 0 ||
         req.body.email.length > 50)
         return res.status(400).end("Error email (Caracter number must be between 1 and 50)");
-    if (!req.body.role || parseInt(req.body.role) < 0 || parseInt(req.body.role) > 3)
+    if (!req.body.role || parseInt(req.body.role) < 0 || parseInt(req.body.role) > 4)
         return res.status(400).end("Error role");
     if (!req.body.password || req.body.password.length < 8 ||
         req.body.password.length > 20)
@@ -110,7 +110,7 @@ exports.editActualUser = function editActualUser(req, res) {
         user.picture = req.body.picture ? req.body.picture : "";
         user.about = req.body.about ? req.body.about : "";
         user.email = req.body.email;
-        user.password = req.body.password ? req.body.password : user.password;
+        user.password = md5(req.body.password) ? req.body.password : user.password;
         user.save(function (err) {
             if (err) {
                 if (err.errors.email.message) return res.status(400).end("Email already used")

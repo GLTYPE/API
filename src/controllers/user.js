@@ -88,16 +88,11 @@ exports.editUser = function editUser(req, res) {
     if (!req.body.email || req.body.email.length == 0 ||
         req.body.email.length > 50)
         return res.status(400).end("Error email (Caracter number must be between 1 and 50)");
-    if (!req.body.role || parseInt(req.body.role) < 0 || parseInt(req.body.role) > 3)
-        return res.status(400).end("Error role");
-    if (!req.body.password || req.body.password.length < 8 ||
-        req.body.password.length > 20)
-        return res.status(400).end("Error password (Caracter number must be between 8 and 20)");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         user.lastname = req.body.lastname;
         user.firstname = req.body.firstname;
-        user.picture = req.body.picture;
-        user.about = req.body.about;
+        user.picture = req.body.picture ? req.body.picture : "";
+        user.about = req.body.about ? req.body.about : "";
         user.email = req.body.email;
         user.save(function (err) {
             if (err) {
@@ -114,15 +109,9 @@ exports.connect = function connect(req, res) {
     User.findOne({email: req.body.email}, function (err, user) {
         if (err) {
             console.log(err);
-            return res.status(400).send("Internal error");
+            return res.status(500).send("Internal error");
         }
         if (!user) {
-            console.log("Fail : Il essai de se co avec : " + req.body.email + " - " + req.body.password)
-            User.find(function(err, myusers) {
-                myusers.forEach(function(myuser) {
-                    console.log(myuser);
-                })
-            })
             return res.status(400).end("User not found")
         }
         if (user.password === md5(req.body.password)) {

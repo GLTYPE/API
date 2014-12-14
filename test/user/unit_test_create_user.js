@@ -22,7 +22,7 @@ describe('Creating account', function () {
     })
 
 
-    it('Should create a user properly', function (done) {
+    it('Should create a user', function (done) {
         var profile = {
             firstname: 'Pierre',
             lastname: 'Medard',
@@ -48,7 +48,7 @@ describe('Creating account', function () {
     });
 
 
-    it('Can t create a user because of multiple mail', function (done) {
+    it('Should fail to create a user because of multiple mail', function (done) {
         var profile = {
             firstname: 'Pierre',
             lastname: 'Medard',
@@ -70,7 +70,7 @@ describe('Creating account', function () {
     });
 
 
-    it('Can t create a user because of malformated or missing firstname', function (done) {
+    it('Should fail to create a user because of malformated or missing firstname', function (done) {
         var profile = {
             lastname: 'Medard',
             password: 'testtest',
@@ -113,7 +113,7 @@ describe('Creating account', function () {
     });
 
 
-    it('Can t create a user because of mal formated or missing lastname', function (done) {
+    it('Should fail to create a user because of mal formated or missing lastname', function (done) {
         var profile = {
             firstname: "Pierre",
             password: 'testtest',
@@ -156,7 +156,7 @@ describe('Creating account', function () {
     });
 
 
-    it('Can t create a user because of mal formated or missing email', function (done) {
+    it('Should fail to create a user because of mal formated or missing email', function (done) {
         var profile = {
             firstname: 'Pierre',
             lastname: 'Medard',
@@ -199,7 +199,7 @@ describe('Creating account', function () {
     });
 
 
-    it('Can t create a user because of mal formated or missing role', function (done) {
+    it('Should fail to create a user because of mal formated or missing role', function (done) {
         var profile = {
             firstname: 'Pierre',
             lastname: 'Medard',
@@ -242,7 +242,7 @@ describe('Creating account', function () {
     });
 
 
-    it('Can t create a user because of mal formated or missing password', function (done) {
+    it('Should fail to create a user because of mal formated or missing password', function (done) {
         var profile = {
             firstname: "Pierre",
             lastname: 'Medard',

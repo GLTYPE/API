@@ -80,24 +80,6 @@ describe('Getting ingredient', function () {
             });
     });
 
-    it('Should get an ingredient by id', function (done) {
-        request(url)
-            .get('/ingredients/' + idIng)
-            .type('json')
-            .expect(200)
-            .end(function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                res.body.should.have.property("name", "Tomate");
-                res.body.should.have.property("picture", "tomate.jpg");
-                res.body.should.have.property("description", "Une tomate");
-                res.body.should.have.property("values", 10);
-                res.body.should.have.property("owner", IdUser.toString());
-                done();
-            });
-    });
-
     it('Should get an ingredient by name', function (done) {
         request(url)
             .get('/ingredients/name/Pata')

@@ -13,9 +13,9 @@ describe('Creating ingredient', function () {
 
     before(function (done) {
         mongoose.connect('mongodb://localhost/test_in', function () {
-            mongoose.connection.db.dropCollection("users")
-            mongoose.connection.db.dropCollection("ingredients")
-            mongoose.connection.db.dropCollection("accesstokens")
+            mongoose.connection.db.dropCollection("users");
+            mongoose.connection.db.dropCollection("ingredients");
+            mongoose.connection.db.dropCollection("accesstokens");
             User({
                 firstname: "Thomas",
                 lastname: "Lacroix",
@@ -90,6 +90,27 @@ describe('Creating ingredient', function () {
             });
     });
 
+    it('Should fail to create an ingredient due multiple name', function (done) {
+        var profile = {
+            token: token,
+            name: 'Tomate',
+            picture: 'tomate.jpg',
+            description: 'Une tomate',
+            values: 10
+        };
+        request(url)
+            .post('/ingredients')
+            .type('json')
+            .expect(400, "This name already exists")
+            .send(JSON.stringify(profile))
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                done();
+            });
+    });
+
     it('Should fail to create an ingredient due to name missing', function (done) {
         var profile = {
             token: token,
@@ -119,7 +140,7 @@ describe('Creating ingredient', function () {
         request(url)
             .post('/ingredients')
             .type('json')
-            .expect(401)
+            .expect(400, "Token empty")
             .send(JSON.stringify(profile))
             .end(function (err, res) {
                 if (err) {

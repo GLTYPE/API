@@ -95,7 +95,10 @@ describe('Editing account', function () {
     it('Should edit your own firstname properly', function (done) {
         var myRequest = {
             token: token,
-            firstname: "Pierre"
+            firstname: "Pierre",
+            lastname: "Tual",
+            email:"gillesTual@gmail.com"
+
         };
         request(url)
             .put('/users/' + idUser)
@@ -108,8 +111,8 @@ describe('Editing account', function () {
                 }
                 res.body.should.have.property("firstname", "Pierre")
                 res.body.should.have.property("lastname", "Tual")
-                res.body.should.have.property("picture", "mypic.jpg")
-                res.body.should.have.property("about", "Un gros pd")
+                res.body.should.have.property("picture", "")
+                res.body.should.have.property("about", "")
                 res.body.should.have.property("email", "gillesTual@gmail.com")
                 res.body.should.have.property("role", 1)
                 done();

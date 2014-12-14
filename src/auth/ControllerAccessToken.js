@@ -8,6 +8,7 @@ exports.createAccessToken = function createAccessToken(uid, callback) { AccessTo
 exports.removeAccessToken = function removeAccessToken(id, callback) { AccessToken.remove({_id: id}, callback) }
 
 exports.userActionWithToken = function userActionWithToken(token, res, callback, checkId) {
+    if (!token) { return res.status(400).end("Token empty") }
     AccessToken.findById(token, function(err, token) {
         if (err) {
             if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
@@ -21,7 +22,7 @@ exports.userActionWithToken = function userActionWithToken(token, res, callback,
                 console.log(err)
                 return res.status(500).end("Internal error")
             }
-            if (user == null) return res.status(401).end("User not found")
+            if (!user) return res.status(401).end("User not found")
             callback(user)
         });
     })

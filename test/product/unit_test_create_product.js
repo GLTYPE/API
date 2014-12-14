@@ -6,18 +6,20 @@ var winston = require('winston');
 var md5 = require('MD5');
 var User = require('../../src/models/user.js').User;
 var Ingredient = require('../../src/models/ingredient.js').Ingredient;
+var Product = require('../../src/models/product.js').Product;
 
 
-describe('Editing ingredient', function () {
+describe('Creating product', function () {
     var url = 'http://localhost:4242';
     var token = "";
-    var idIng = "";
+    var IdUser;
 
     before(function (done) {
         mongoose.connect('mongodb://localhost/test_in', function () {
             mongoose.connection.db.dropCollection("users")
             mongoose.connection.db.dropCollection("ingredients")
             mongoose.connection.db.dropCollection("accesstokens")
+            mongoose.connection.db.dropCollection("products")
             User({
                 firstname: "Thomas",
                 lastname: "Lacroix",
@@ -32,7 +34,7 @@ describe('Editing ingredient', function () {
                     lastname: "Medard",
                     email: "medard@gmail.com",
                     about: "",
-                    role: 3,
+                    role: 2,
                     password: md5("00000000")
                 }).save(function (err, user) {
                     if (err) throw err;
@@ -40,6 +42,7 @@ describe('Editing ingredient', function () {
                         email: "medard@gmail.com",
                         password: '00000000'
                     };
+                    IdUser = user._id;
                     request(url)
                         .post('/users/connect')
                         .type('json')
@@ -53,21 +56,20 @@ describe('Editing ingredient', function () {
                                 name: 'Patate',
                                 picture: 'patate.jpg',
                                 description: "Une patate",
-                                values: 10,
+                                values: 20,
                                 owner_id: user._id
                             }).save(function(err, ing) {
                                 if (err) throw err;
-                                idIng = ing._id;
                                 Ingredient({
-                                    name: 'Patate2',
-                                    picture: 'patate.jpg',
-                                    description: "Une autre patate",
+                                    name: 'Tomate',
+                                    picture: 'tomate.jpg',
+                                    description: "Une tomate",
                                     values: 10,
                                     owner_id: user._id
                                 }).save(function(err, ing) {
                                     if (err) throw err;
                                     done();
-                                });
+                                })
                             })
                         });
                 });
@@ -80,70 +82,55 @@ describe('Editing ingredient', function () {
             mongoose.connection.db.dropCollection("ingredients")
             mongoose.connection.db.dropCollection("users")
             mongoose.connection.db.dropCollection("accesstokens")
+            mongoose.connection.db.dropCollection("products")
         });
         mongoose.connection.close(done)
     })
 
-    it('Should edit an ingredient', function (done) {
-        var profile = {
+    it('Should create a product', function (done) {
+        var product = {
             token: token,
-            name: 'Tomate',
-            picture: 'tomate.jpg',
-            description: 'Une tomate',
-            values: 10
+            name: 'MyProduct',
+            picture: 'my_product.jpg',
+            description: 'My product',
+            brand: "Sodebo",
+            ings: ["Patate", "Tomate"],
+            values: 30
         };
         request(url)
-            .put('/ingredients/' + idIng)
+            .post('/products')
             .type('json')
-            .expect(200)
-            .send(JSON.stringify(profile))
+            .expect(201)
+            .send(JSON.stringify(product))
             .end(function (err, res) {
                 if (err) {
                     throw err;
                 }
-                res.body.should.have.property("name", "Tomate");
-                res.body.should.have.property("picture", "tomate.jpg");
-                res.body.should.have.property("description", "Une tomate");
-                res.body.should.have.property("values", 10);
+                res.body.should.have.property("name", "MyProduct");
+                res.body.should.have.property("picture", "my_product.jpg");
+                res.body.should.have.property("description", "My product");
+                res.body.should.have.property("brand", "Sodebo");
+                res.body.should.have.property("ings", ["Patate", "Tomate"]);
+                res.body.should.have.property("values", 30);
+                res.body.should.have.property("owner", IdUser.toString());
                 done();
             });
     });
 
-    it('Should fail to edit an ingredient due multiple name', function (done) {
-        var profile = {
+    it('Should fail to create a product due to name missing', function (done) {
+        var product = {
             token: token,
-            name: 'Patate2',
-            picture: 'tomate.jpg',
-            description: 'Une tomate',
-            values: 10
+            picture: 'my_product.jpg',
+            description: 'My product',
+            brand: "Sodebo",
+            ings: ["Patate", "Tomate"],
+            values: 30
         };
         request(url)
-            .put('/ingredients/' + idIng)
-            .type('json')
-            .expect(400, "This name already exists")
-            .send(JSON.stringify(profile))
-            .end(function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                done();
-            });
-    });
-
-
-    it('Should fail to edit an ingredient due to missing name', function (done) {
-        var profile = {
-            token: token,
-            name: '',
-            picture: 'tomate.jpg',
-            description: 'Une tomate',
-            values: 10
-        };
-        request(url)
-            .put('/ingredients/' + idIng)
+            .post('/products')
             .type('json')
             .expect(400, "name missing")
-            .send(JSON.stringify(profile))
+            .send(JSON.stringify(product))
             .end(function (err, res) {
                 if (err) {
                     throw err;
@@ -152,18 +139,20 @@ describe('Editing ingredient', function () {
             });
     });
 
-    it('Should fail to edit an ingredient due to missing token', function (done) {
-        var profile = {
-            name: 'Tomate',
-            picture: 'tomate.jpg',
-            description: 'Une tomate',
-            values: 10
+    it('Should fail to create a product due to token missing', function (done) {
+        var product = {
+            name: "MyProduct",
+            picture: 'my_product.jpg',
+            description: 'My product',
+            brand: "Sodebo",
+            ings: ["Patate", "Tomate"],
+            values: 30
         };
         request(url)
-            .put('/ingredients/' + idIng)
+            .post('/products')
             .type('json')
             .expect(400, "Token empty")
-            .send(JSON.stringify(profile))
+            .send(JSON.stringify(product))
             .end(function (err, res) {
                 if (err) {
                     throw err;
@@ -172,7 +161,7 @@ describe('Editing ingredient', function () {
             });
     });
 
-    it('Should fail to edit an ingredient due to not a gastronomist', function (done) {
+    it('Should fail to create a product due to not gastronomist', function (done) {
         var account = {
             email: "lacroix@gmail.com",
             password: '00000000'
@@ -186,18 +175,20 @@ describe('Editing ingredient', function () {
                     throw err;
                 }
                 token = JSON.parse(res.text);
-                var profile = {
+                var product = {
                     token: token,
-                    name: 'tomate',
-                    picture: 'tomate.jpg',
-                    description: 'Une tomate',
-                    values: 10
+                    name: "MyProduct",
+                    picture: 'my_product.jpg',
+                    description: 'My product',
+                    brand: "Sodebo",
+                    ings: ["Patate", "Tomate"],
+                    values: 30
                 };
                 request(url)
-                    .put('/ingredients/' + idIng)
+                    .post('/products')
                     .type('json')
-                    .expect(401, "Not a gastronomist")
-                    .send(JSON.stringify(profile))
+                    .expect(401, "Not a food supplier")
+                    .send(JSON.stringify(product))
                     .end(function (err, res) {
                         if (err) {
                             throw err;

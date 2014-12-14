@@ -4,18 +4,18 @@ var Product = require('../models/product.js').Product,
     AccessToken = require('../auth/ControllerAccessToken.js');
 
 exports.createProduct = function createProduct(req, res) {
+    if (!req.body.name || req.body.name.length == 0)
+        return res.status(400).end("name missing");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        if (user.role == 2 || user.role == 4)
-            return res.status(401).end();
-        if (!req.body.name || req.body.name.length == 0)
-            return res.status(400).end("Ingredient name missing.");
+        if (user.role == 1 || user.role == 3)
+            return res.status(401).end("Not a food supplier");
         Product({
             name: req.body.name,
             picture: req.body.picture ? req.body.picture : "",
             description: req.body.description ? req.body.description : "",
             brand: req.body.brand ? req.body.brand : "",
             ings: typeof(req.body.ings) == 'object' ? req.body.ings : [""],
-            value: req.body.value ? req.body.value : "",
+            values: req.body.values ? req.body.values : "",
             owner: user._id
         }).save(function (err, prod) {
             if (err) {
@@ -59,7 +59,7 @@ exports.getProductByName = function GetProductByName(req, res) {
 }
 
 exports.getProductByIngredientName = function GetProductByProductName(req, res) {
-    Product.find({ings: req.params.name}, function (err, product) {
+    Product.find({ings: new RegExp(req.params.name, "i")}, function (err, product) {
         if (err) {
             console.log(err);
             return res.status(500).end("Internal error");
@@ -84,10 +84,10 @@ exports.getProductByCriteria = function getProductByCriteria(req, res) {
 
 exports.editProduct = function editProduct(req, res) {
     if (!req.body.name || req.body.name.length == 0)
-        return res.status(400).end("Ingredient name missing.");
+        return res.status(400).end("name missing");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        if (user.role == 2 || user.role == 4)
-            return res.status(401).end();
+        if (user.role == 1 || user.role == 3)
+            return res.status(401).end("Not a food supplier");
         Product.findById(req.params.id, function (err, prod) {
             if (err) {
                 if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
@@ -103,7 +103,7 @@ exports.editProduct = function editProduct(req, res) {
             prod.save(function (err, prod) {
                 if (err) {
                     console.log(err);
-                    return res.status(400).end("Internal error");
+                    return res.status(500).end("Internal error");
                 }
                 res.status(200).json(prod);
             });
@@ -113,9 +113,9 @@ exports.editProduct = function editProduct(req, res) {
 
 exports.removeProduct = function removeProduct(req, res) {
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        if (user.role == 2 || user.role == 4)
-            return res.status(401).end();
-        Product.remove({_id: prod._id}, function (err) {
+        if (user.role == 1 || user.role == 3)
+            return res.status(401).end("Not a food supplier");
+        Product.remove({_id: req.params.id}, function (err) {
             if (err) {
                 if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
                 console.log(err);

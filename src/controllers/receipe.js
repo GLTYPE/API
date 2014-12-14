@@ -5,8 +5,8 @@ var Receipe = require('../models/receipe.js').Receipe,
 
 exports.createReceipe = function createReceipe(req, res) {
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        if (user.role == 3 || user.role == 4)
-            return res.status(401).end();
+        if (user.role == 1 || user.role == 2)
+            return res.status(401).end("Not a gastronomist");
         if (!req.body.name || req.body.name.length == 0)
             return res.status(400).end("Ingredient name missing.");
         Receipe({
@@ -73,8 +73,8 @@ exports.getReceipeByCriteria = function getReceipeByCriteria(req, res) {
 }
 
 exports.editReceipe = function editReceipe(req, res) {
-    if (!req.body.name || req.body.name.length == 0)
-        return res.status(400).end("Ingredient name missing.");
+    if (user.role == 1 || user.role == 2)
+        return res.status(401).end("Not a gastronomist");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         if (user.role == 3 || user.role == 4)
             return res.status(401).end();
@@ -102,8 +102,8 @@ exports.editReceipe = function editReceipe(req, res) {
 
 exports.removeReceipe = function removeReceipe(req, res) {
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        if (user.role == 2 || user.role == 4)
-            return res.status(401).end();
+        if (user.role == 1 || user.role == 2)
+            return res.status(401).end("Not a gastronomist");
         Receipe.remove({_id: rec._id}, function (err) {
             if (err) {
                 if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");

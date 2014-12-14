@@ -100,7 +100,7 @@ exports.editIngredient = function editIngredient(req, res) {
             ing.values = req.body.values ? req.body.values : ing.values;
             ing.save(function (err, ing) {
                 if (err) {
-                    if (err.errors.name.message) return res.status(400).end("Name already used")
+                    if (err.errors.name.message) return res.status(400).end("This name already exists")
                     console.log(err);
                     res.status(400).send("Internal error");
                 }
@@ -113,7 +113,7 @@ exports.editIngredient = function editIngredient(req, res) {
 exports.removeIngredient = function removeIngredient(req, res) {
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         if (user.role == 1 || user.role == 2)
-            return res.status(401).end();
+            return res.status(401).end("Not a gastronomist");
         Ingredient.remove({_id: req.body.id}, function (err) {
             if (err) {
                 if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");

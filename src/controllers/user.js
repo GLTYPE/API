@@ -110,6 +110,7 @@ exports.editActualUser = function editActualUser(req, res) {
         user.picture = req.body.picture ? req.body.picture : "";
         user.about = req.body.about ? req.body.about : "";
         user.email = req.body.email;
+        user.password = req.body.password ? req.body.password : user.password;
         user.save(function (err) {
             if (err) {
                 if (err.errors.email.message) return res.status(400).end("Email already used")

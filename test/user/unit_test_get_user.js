@@ -49,6 +49,37 @@ describe('Getting account', function () {
         mongoose.connection.close(done)
     })
 
+    it('Should get my own user profile', function (done) {
+        var account = {
+            email: "medard@gmail.com",
+            password: '00000000'
+        };
+        request(url)
+            .post('/users/connect')
+            .type('json')
+            .send(JSON.stringify(account))
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                token = JSON.parse(res.text);
+                request(url)
+                    .get('/users/token/' + token)
+                    .type('json')
+                    .expect(200)
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        res.body.should.have.property("firstname", "Pierre")
+                        res.body.should.have.property("lastname", "Medard")
+                        res.body.should.have.property("email", "medard@gmail.com")
+                        res.body.should.have.property("role", 1)
+                        done();
+                    });
+            });
+    });
+
     it('Should get a user by id', function (done) {
         request(url)
             .get('/users/' + idUser)

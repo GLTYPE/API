@@ -8,13 +8,13 @@ exports.createReceipe = function createReceipe(req, res) {
         if (user.role == 1 || user.role == 2)
             return res.status(401).end("Not a gastronomist");
         if (!req.body.name || req.body.name.length == 0)
-            return res.status(400).end("Ingredient name missing.");
+            return res.status(400).end("name missing");
         Receipe({
-            name: req.body.name ? req.body.name : "",
+            name: req.body.name,
             picture: req.body.picture ? req.body.picture : "",
             description: req.body.description ? req.body.description : "",
             ings: typeof(req.body.ings) == 'object' ? req.body.ings : [""],
-            value: req.body.value ? req.body.value : "",
+            values: req.body.values ? req.body.values : 0,
             owner: req.body.userId
         }).save(function (err, rec) {
             if (err) {
@@ -73,11 +73,11 @@ exports.getReceipeByCriteria = function getReceipeByCriteria(req, res) {
 }
 
 exports.editReceipe = function editReceipe(req, res) {
-    if (user.role == 1 || user.role == 2)
-        return res.status(401).end("Not a gastronomist");
+    if (!req.body.name || req.body.name.length == 0)
+        return res.status(400).end("name missing");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        if (user.role == 3 || user.role == 4)
-            return res.status(401).end();
+        if (user.role == 1 || user.role == 2)
+            return res.status(401).end("Not a gastronomist");
         Receipe.findById(req.params.id, function (err, rec) {
             if (err) {
                 if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
@@ -85,16 +85,16 @@ exports.editReceipe = function editReceipe(req, res) {
                 return res.status(500).end("Internal error");
             }
             rec.name = req.body.name;
-            rec.picture = req.body.picture;
-            rec.description = req.body.description;
-            rec.ings = req.body.ings;
-            rec.values = req.body.values;
+            rec.picture = req.body.picture ? req.body.picture : rec.picture;
+            rec.description = req.body.description ? req.body.description : rec.description;
+            rec.ings = req.body.ings ? req.body.ings : rec.ings;
+            rec.values = req.body.values ? req.body.values : rec.values;
             rec.save(function (err, rec) {
                 if (err) {
                     console.log(err);
                     return res.status(500).end("Internal error");
                 }
-                res.status(204).json(rec);
+                res.status(200).json(rec);
             });
         });
     });

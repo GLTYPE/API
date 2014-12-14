@@ -82,8 +82,6 @@ exports.getIngredientByCriteria = function getIngredientByCriteria(req, res) {
 }
 
 exports.editIngredient = function editIngredient(req, res) {
-    if (!req.body.name || req.body.name.length == 0)
-        return res.status(400).end("name missing");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         if (user.role == 1 || user.role == 2)
             return res.status(401).end("Not a gastronomist");
@@ -93,7 +91,7 @@ exports.editIngredient = function editIngredient(req, res) {
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
-            ing.name = req.body.name;
+            ing.name = req.body.name ? req.body.name : ing.name;
             ing.picture = req.body.picture ? req.body.picture : ing.picture;
             ing.description = req.body.description ? req.body.description : ing.description;
             ing.faith = req.body.faith ? req.body.faith: ing.faith;

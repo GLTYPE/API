@@ -15,7 +15,7 @@ exports.createProduct = function createProduct(req, res) {
             description: req.body.description ? req.body.description : "",
             brand: req.body.brand ? req.body.brand : "",
             ings: typeof(req.body.ings) == 'object' ? req.body.ings : [""],
-            values: req.body.values ? req.body.values : "",
+            values: req.body.values ? req.body.values : 0,
             owner: user._id
         }).save(function (err, prod) {
             if (err) {
@@ -83,8 +83,6 @@ exports.getProductByCriteria = function getProductByCriteria(req, res) {
 }
 
 exports.editProduct = function editProduct(req, res) {
-    if (!req.body.name || req.body.name.length == 0)
-        return res.status(400).end("name missing");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
         if (user.role == 1 || user.role == 3)
             return res.status(401).end("Not a food supplier");

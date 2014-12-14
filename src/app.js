@@ -60,6 +60,7 @@ app.delete('/moments/:id', Moment.removeMoment);
 
 app.post('/users', User.createUser);
 //app.get('/users', User.getAllUsers);
+app.get('/users/token/:token', User.getActualUser);
 app.get('/users/:id', User.getUserById);
 app.get('/users/mail/:email', User.getUserByEmail);
 app.get('/users/name/:name', User.getUserByName);

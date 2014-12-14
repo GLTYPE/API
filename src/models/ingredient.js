@@ -6,7 +6,7 @@ var IngredientSchema = new mongoose.Schema({
     name: {type: String, unique: true},
     picture: String,
     description: String,
-    rate: [{ rateNumber: Number, rateValue : Number }],
+    rate: [Number],
     moments: [mongoose.Schema.Types.ObjectId],
     faith: [String],
     values: Number,

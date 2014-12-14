@@ -141,28 +141,6 @@ describe('Editing product', function () {
             });
     });
 
-    it('Should fail to edit a product due to missing name', function (done) {
-        var product = {
-            token: token,
-            picture: 'my_product2.jpg',
-            description: 'My product 2',
-            brand: "Sodebo 2",
-            ings: ["Patate"],
-            values: 40
-        };
-        request(url)
-            .put('/products/' + IdProduct)
-            .type('json')
-            .expect(400, "name missing")
-            .send(JSON.stringify(product))
-            .end(function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                done();
-            });
-    });
-
     it('Should fail to edit a product due to missing token', function (done) {
         var product = {
             name: "MyProduct2",

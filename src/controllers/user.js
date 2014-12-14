@@ -47,6 +47,12 @@ exports.getAllUsers = function getAllUsers(req, res) {
     });
 }
 
+exports.getActualUser = function getActualUser(req, res) {
+    AccessToken.userActionWithToken(req.params.token, res, function (user) {
+        res.status(200).json(user);
+    });
+}
+
 exports.getUserByEmail = function getUserByEmail(req, res) {
     User.findOne({email: req.params.email}, function (err, user) {
         if (err) {

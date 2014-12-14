@@ -130,28 +130,6 @@ describe('Editing ingredient', function () {
             });
     });
 
-
-    it('Should fail to edit an ingredient due to missing name', function (done) {
-        var profile = {
-            token: token,
-            name: '',
-            picture: 'tomate.jpg',
-            description: 'Une tomate',
-            values: 10
-        };
-        request(url)
-            .put('/ingredients/' + idIng)
-            .type('json')
-            .expect(400, "name missing")
-            .send(JSON.stringify(profile))
-            .end(function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                done();
-            });
-    });
-
     it('Should fail to edit an ingredient due to missing token', function (done) {
         var profile = {
             name: 'Tomate',

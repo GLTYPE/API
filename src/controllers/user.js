@@ -85,18 +85,28 @@ exports.getUserByName = function getUserByName(req, res) {
 }
 
 exports.editUser = function editUser(req, res) {
-    if (!req.body.firstname || req.body.firstname.length == 0 ||
-        req.body.firstname.length > 50)
-        return res.status(400).end("Error firstname (Caracter number must be between 1 and 50)");
-    if (!req.body.lastname || req.body.lastname.length == 0 ||
-        req.body.lastname.length > 50)
-        return res.status(400).end("Error lastname (Caracter number must be between 1 and 50)");
     if (!req.body.email || req.body.email.length == 0 ||
         req.body.email.length > 50)
         return res.status(400).end("Error email (Caracter number must be between 1 and 50)");
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        user.lastname = req.body.lastname;
-        user.firstname = req.body.firstname;
+        user.picture = req.body.picture ? req.body.picture : "";
+        user.about = req.body.about ? req.body.about : "";
+        user.email = req.body.email;
+        user.save(function (err) {
+            if (err) {
+                if (err.errors.email.message) return res.status(400).end("Email already used")
+                return res.status(500).end("Internal error");
+            }
+            res.status(200).json(user);
+        });
+    }, req.params.id);
+}
+
+exports.editActualUser = function editActualUser(req, res) {
+    if (!req.body.email || req.body.email.length == 0 ||
+        req.body.email.length > 50)
+        return res.status(400).end("Error email (Caracter number must be between 1 and 50)");
+    AccessToken.userActionWithToken(req.params.token, res, function (user) {
         user.picture = req.body.picture ? req.body.picture : "";
         user.about = req.body.about ? req.body.about : "";
         user.email = req.body.email;

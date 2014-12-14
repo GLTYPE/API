@@ -15,7 +15,7 @@ exports.createReceipe = function createReceipe(req, res) {
             description: req.body.description ? req.body.description : "",
             ings: typeof(req.body.ings) == 'object' ? req.body.ings : [""],
             values: req.body.values ? req.body.values : 0,
-            owner: req.body.userId
+            owner: user._id
         }).save(function (err, rec) {
             if (err) {
                 console.log(err);

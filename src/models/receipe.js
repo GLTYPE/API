@@ -7,7 +7,7 @@ var ReceipeSchema = new mongoose.Schema({
     description: String,
     rate: [Number],
     moments: [mongoose.Schema.Types.ObjectId],
-    ings: [mongoose.Schema.Types.ObjectId],
+    ings: [String],
     values: Number,
     owner: mongoose.Schema.Types.ObjectId
 });

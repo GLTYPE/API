@@ -9,7 +9,7 @@ var Ingredient = require('../../src/models/ingredient.js').Ingredient;
 var Receipe = require('../../src/models/receipe.js').Receipe;
 
 
-describe('Creating product', function () {
+describe('Creating receipe', function () {
     var url = 'http://localhost:4242';
     var token = "";
     var IdUser;
@@ -34,7 +34,7 @@ describe('Creating product', function () {
                     lastname: "Medard",
                     email: "medard@gmail.com",
                     about: "",
-                    role: 2,
+                    role: 3,
                     password: md5("00000000")
                 }).save(function (err, user) {
                     if (err) throw err;
@@ -88,11 +88,11 @@ describe('Creating product', function () {
     })
 
     it('Should create a receipe', function (done) {
-        var product = {
+        var receipe = {
             token: token,
-            name: 'MyProduct',
-            picture: 'my_product.jpg',
-            description: 'My product',
+            name: 'MyReceipe',
+            picture: 'my_receipe.jpg',
+            description: 'My receipe',
             ings: ["Patate", "Tomate"],
             values: 30
         };
@@ -100,18 +100,96 @@ describe('Creating product', function () {
             .post('/receipes')
             .type('json')
             .expect(201)
-            .send(JSON.stringify(product))
+            .send(JSON.stringify(receipe))
             .end(function (err, res) {
                 if (err) {
                     throw err;
                 }
-                res.body.should.have.property("name", "MyProduct");
-                res.body.should.have.property("picture", "my_product.jpg");
-                res.body.should.have.property("description", "My product");
+                res.body.should.have.property("name", "MyReceipe");
+                res.body.should.have.property("picture", "my_receipe.jpg");
+                res.body.should.have.property("description", "My receipe");
                 res.body.should.have.property("ings", ["Patate", "Tomate"]);
                 res.body.should.have.property("values", 30);
                 res.body.should.have.property("owner", IdUser.toString());
                 done();
+            });
+    });
+
+    it('Should fail to create a receipe due to name missing', function (done) {
+        var receipe = {
+            token: token,
+            picture: 'my_receipe.jpg',
+            description: 'My receipe',
+            ings: ["Patate", "Tomate"],
+            values: 30
+        };
+        request(url)
+            .post('/receipes')
+            .type('json')
+            .expect(400, "name missing")
+            .send(JSON.stringify(receipe))
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                done();
+            });
+    });
+
+    it('Should fail to create a receipe due to token missing', function (done) {
+        var receipe = {
+            name: 'MyReceipe',
+            picture: 'my_receipe.jpg',
+            description: 'My receipe',
+            ings: ["Patate", "Tomate"],
+            values: 30
+        };
+        request(url)
+            .post('/receipes')
+            .type('json')
+            .expect(400, "Token empty")
+            .send(JSON.stringify(receipe))
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                done();
+            });
+    });
+
+    it('Should fail to create a receipe due to not gastronomist', function (done) {
+        var account = {
+            email: "lacroix@gmail.com",
+            password: '00000000'
+        };
+        request(url)
+            .post('/users/connect')
+            .type('json')
+            .send(JSON.stringify(account))
+            .end(function (err, res) {
+                if (err) {
+                    throw err;
+                }
+                token = JSON.parse(res.text);
+                var receipe = {
+                    token: token,
+                    name: 'MyReceipe',
+                    picture: 'my_receipe.jpg',
+                    description: 'My receipe',
+                    ings: ["Patate", "Tomate"],
+                    values: 30
+                };
+                request(url)
+                    .post('/receipes')
+                    .type('json')
+                    .expect(401, "Not a gastronomist")
+                    .send(JSON.stringify(receipe))
+                    .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        done();
+                    });
             });
     });
 });

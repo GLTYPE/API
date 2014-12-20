@@ -137,7 +137,11 @@ exports.connect = function connect(req, res) {
                     console.log("Error : " + err);
                     return res.status(500).end("Internal error");
                 }
-                res.status(200).send(token._id);
+                var data = {
+                    "token" : token._id,
+                    "role": user.role
+                }
+                res.status(200).json(data);
             });
         }
         else

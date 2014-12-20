@@ -49,6 +49,8 @@ describe('Connecting account', function () {
                 if (err) {
                     throw err;
                 }
+                res.body.should.have.property("token");
+                res.body.should.have.property("role", 1);
                 done();
             });
     });

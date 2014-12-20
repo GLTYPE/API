@@ -28,7 +28,7 @@ app.get('/search/products/:name/:minCal/:maxCal/:rateMin/:rateMax', Product.getP
 app.get('/search/receipes/:name/:minCal/:maxCal/:rateMin/:rateMax', Receipe.getReceipeByCriteria);
 
 app.post('/ingredients', Ingredient.createIngredient);
-//app.get('/ingredients', Ingredient.getAllIngredients);
+app.get('/ingredients', Ingredient.getAllIngredients);
 app.get('/ingredients/:id', Ingredient.getIngredientById);
 app.get('/ingredients/name/:name', Ingredient.getIngredientByName);
 app.get('/ingredients/:id/values', Ingredient.getIngredientValues);
@@ -36,7 +36,7 @@ app.put('/ingredients/:id', Ingredient.editIngredient);
 app.delete('/ingredients/:id', Ingredient.removeIngredient);
 
 app.post('/products', Product.createProduct);
-//app.get('/products', Product.getAllProduct);
+app.get('/products', Product.getAllProduct);
 app.get('/products/:id', Product.getProductById);
 app.get('/products/name/:name', Product.getProductByName);
 app.get('/products/ingredient/:name', Product.getProductByIngredientName);
@@ -44,14 +44,14 @@ app.put('/products/:id', Product.editProduct);
 app.delete('/products/:id', Product.removeProduct);
 
 app.post('/receipes', Receipe.createReceipe);
-//app.get('/receipes', Receipe.getAllReceipes);
+app.get('/receipes', Receipe.getAllReceipes);
 app.get('/receipes/:id', Receipe.getReceipeById);
 app.get('/receipes/name/:name', Receipe.getReceipeByName);
 app.put('/receipes/:id', Receipe.editReceipe);
 app.delete('/receipes/:id', Receipe.removeReceipe);
 
 app.post('/moments', Moment.createMoment);
-//app.get('/moments', Moment.getAllMoments);
+app.get('/moments', Moment.getAllMoments);
 app.get('/moments/:id', Moment.getMomentById);
 app.get('/moments/owner/:id', Moment.getMomentByOwnerId);
 app.get('/moments/target/:id', Moment.getMomentByTargetId);

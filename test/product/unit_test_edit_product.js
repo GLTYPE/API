@@ -14,6 +14,7 @@ describe('Editing product', function () {
     var token = "";
     var IdUser;
     var IdProduct;
+    var IdIng = [];
 
     before(function (done) {
         mongoose.connect('mongodb://localhost/test_in', function () {
@@ -52,29 +53,31 @@ describe('Editing product', function () {
                             if (err) {
                                 throw err;
                             }
-                            token = JSON.parse(res.text);
+                            token = JSON.parse(res.text).token;
                             Ingredient({
                                 name: 'Patate',
                                 picture: 'patate.jpg',
                                 description: "Une patate",
                                 values: 20,
                                 owner_id: user._id
-                            }).save(function (err) {
+                            }).save(function (err, ing) {
                                 if (err) throw err;
+                                IdIng[0] = ing._id;
                                 Ingredient({
                                     name: 'Tomate',
                                     picture: 'tomate.jpg',
                                     description: "Une tomate",
                                     values: 10,
                                     owner_id: user._id
-                                }).save(function (err) {
+                                }).save(function (err, ing) {
                                     if (err) throw err;
+                                    IdIng[1] = ing._id;
                                     Product({
                                         name: "MyProduct",
                                         picture: "myproduct.jpg",
                                         description: "My product",
                                         brand: "Sodebo",
-                                        ings: ["Patate", "Tomate"],
+                                        ings: [IdIng[0], IdIng[1]],
                                         values: 30,
                                         owner: user._id
                                     }).save(function (err, prod) {
@@ -85,7 +88,7 @@ describe('Editing product', function () {
                                             picture: "myproduct.jpg",
                                             description: "My product",
                                             brand: "Sodebo",
-                                            ings: ["Patate", "Tomate"],
+                                            ings: [IdIng[0], IdIng[1]],
                                             values: 30,
                                             owner: user._id
                                         }).save(function (err, prod) {
@@ -118,7 +121,6 @@ describe('Editing product', function () {
             picture: 'my_product2.jpg',
             description: 'My product 2',
             brand: "Sodebo 2",
-            ings: ["Patate"],
             values: 40
         };
         request(url)
@@ -134,7 +136,7 @@ describe('Editing product', function () {
                 res.body.should.have.property("picture", "my_product2.jpg");
                 res.body.should.have.property("description", "My product 2");
                 res.body.should.have.property("brand", "Sodebo 2");
-                res.body.should.have.property("ings", ["Patate"]);
+                res.body.should.have.property("ings");
                 res.body.should.have.property("values", 40);
                 res.body.should.have.property("owner", IdUser.toString());
                 done();
@@ -176,14 +178,13 @@ describe('Editing product', function () {
                 if (err) {
                     throw err;
                 }
-                token = JSON.parse(res.text);
+                token = JSON.parse(res.text).token;
                 var product = {
                     token: token,
                     name: 'MyProduct2',
                     picture: 'my_product2.jpg',
                     description: 'My product 2',
                     brand: "Sodebo 2",
-                    ings: ["Patate"],
                     values: 40
                 };
                 request(url)

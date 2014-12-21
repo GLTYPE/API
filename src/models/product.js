@@ -8,7 +8,7 @@ var ProductSchema = new mongoose.Schema({
     rate: [Number],
     moments: [Number],
     brand: String,
-    ings: [String],
+    ings: [mongoose.Schema.Types.ObjectId],
     values: Number,
     owner: mongoose.Schema.Types.ObjectId
 });

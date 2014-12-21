@@ -51,7 +51,7 @@ describe('Creating receipe', function () {
                             if (err) {
                                 throw err;
                             }
-                            token = JSON.parse(res.text);
+                            token = JSON.parse(res.text).token;
                             Ingredient({
                                 name: 'Patate',
                                 picture: 'patate.jpg',
@@ -93,7 +93,6 @@ describe('Creating receipe', function () {
             name: 'MyReceipe',
             picture: 'my_receipe.jpg',
             description: 'My receipe',
-            ings: ["Patate", "Tomate"],
             values: 30
         };
         request(url)
@@ -108,7 +107,7 @@ describe('Creating receipe', function () {
                 res.body.should.have.property("name", "MyReceipe");
                 res.body.should.have.property("picture", "my_receipe.jpg");
                 res.body.should.have.property("description", "My receipe");
-                res.body.should.have.property("ings", ["Patate", "Tomate"]);
+                res.body.should.have.property("ings", []);
                 res.body.should.have.property("values", 30);
                 res.body.should.have.property("owner", IdUser.toString());
                 done();
@@ -170,13 +169,12 @@ describe('Creating receipe', function () {
                 if (err) {
                     throw err;
                 }
-                token = JSON.parse(res.text);
+                token = JSON.parse(res.text).token;
                 var receipe = {
                     token: token,
                     name: 'MyReceipe',
                     picture: 'my_receipe.jpg',
                     description: 'My receipe',
-                    ings: ["Patate", "Tomate"],
                     values: 30
                 };
                 request(url)

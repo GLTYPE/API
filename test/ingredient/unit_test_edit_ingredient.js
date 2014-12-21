@@ -48,7 +48,7 @@ describe('Editing ingredient', function () {
                             if (err) {
                                 throw err;
                             }
-                            token = JSON.parse(res.text);
+                            token = JSON.parse(res.text).token;
                             Ingredient({
                                 name: 'Patate',
                                 picture: 'patate.jpg',
@@ -163,7 +163,7 @@ describe('Editing ingredient', function () {
                 if (err) {
                     throw err;
                 }
-                token = JSON.parse(res.text);
+                token = JSON.parse(res.text).token;
                 var profile = {
                     token: token,
                     name: 'tomate',

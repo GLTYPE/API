@@ -13,7 +13,7 @@ exports.createReceipe = function createReceipe(req, res) {
             name: req.body.name,
             picture: req.body.picture ? req.body.picture : "",
             description: req.body.description ? req.body.description : "",
-            ings: typeof(req.body.ings) == 'object' ? req.body.ings : [""],
+            ings: typeof(req.body.ings) == 'object' ? req.body.ings : [],
             values: req.body.values ? req.body.values : 0,
             owner: user._id
         }).save(function (err, rec) {

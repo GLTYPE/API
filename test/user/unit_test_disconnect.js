@@ -35,7 +35,7 @@ describe('Disconnecting account', function () {
                         if (err) {
                             throw err;
                         }
-                        token = JSON.parse(res.text);
+                        token = JSON.parse(res.text).token;
                         done();
                     });
             });

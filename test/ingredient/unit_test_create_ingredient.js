@@ -48,7 +48,7 @@ describe('Creating ingredient', function () {
                         if (err) {
                             throw err;
                         }
-                        token = JSON.parse(res.text);
+                        token = JSON.parse(res.text).token;
                         done();
                     });
             });
@@ -163,7 +163,7 @@ describe('Creating ingredient', function () {
                 if (err) {
                     throw err;
                 }
-                token = JSON.parse(res.text);
+                token = JSON.parse(res.text).token;
                 var profile = {
                     token: token,
                     name: 'tomate',

@@ -226,18 +226,7 @@ describe('Creating account', function () {
                 if (err) {
                     throw err;
                 }
-            });
-        profile.role = '4';
-        request(url)
-            .post('/users')
-            .type('json')
-            .expect(400, "Error role")
-            .send(JSON.stringify(profile))
-            .end(function (err, res) {
-                if (err) {
-                    throw err;
-                }
-                done();
+                done()
             });
     });
 

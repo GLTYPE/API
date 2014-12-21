@@ -62,7 +62,7 @@ describe('Getting account', function () {
                 if (err) {
                     throw err;
                 }
-                token = JSON.parse(res.text);
+                token = JSON.parse(res.text).token;
                 request(url)
                     .get('/users/token/' + token)
                     .type('json')

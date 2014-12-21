@@ -47,7 +47,7 @@ describe('Editing account', function () {
                             if (err) {
                                 throw err;
                             }
-                            token = JSON.parse(res.text);
+                            token = JSON.parse(res.text).token;
                             idUser = user._id;
                             done();
                         });
@@ -67,8 +67,6 @@ describe('Editing account', function () {
     it('Should edit your own profile properly', function (done) {
         var myRequest = {
             token: token,
-            firstname: "Gilles",
-            lastname: "Tual",
             picture: "mypic.jpg",
             about: "Un gros pd",
             email: "gillesTual@gmail.com"
@@ -82,8 +80,8 @@ describe('Editing account', function () {
                 if (err) {
                     throw err;
                 }
-                res.body.should.have.property("firstname", "Gilles")
-                res.body.should.have.property("lastname", "Tual")
+                res.body.should.have.property("firstname", "Pierre")
+                res.body.should.have.property("lastname", "Medard")
                 res.body.should.have.property("picture", "mypic.jpg")
                 res.body.should.have.property("about", "Un gros pd")
                 res.body.should.have.property("email", "gillesTual@gmail.com")

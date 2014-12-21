@@ -13,6 +13,7 @@ describe('Creating product', function () {
     var url = 'http://localhost:4242';
     var token = "";
     var IdUser;
+    var IdIng = [mongoose.Schema.Types.ObjectId];
 
     before(function (done) {
         mongoose.connect('mongodb://localhost/test_in', function () {
@@ -51,7 +52,7 @@ describe('Creating product', function () {
                             if (err) {
                                 throw err;
                             }
-                            token = JSON.parse(res.text);
+                            token = JSON.parse(res.text).token;
                             Ingredient({
                                 name: 'Patate',
                                 picture: 'patate.jpg',
@@ -60,6 +61,7 @@ describe('Creating product', function () {
                                 owner_id: user._id
                             }).save(function(err, ing) {
                                 if (err) throw err;
+                                IdIng[0] = ing._id;
                                 Ingredient({
                                     name: 'Tomate',
                                     picture: 'tomate.jpg',
@@ -68,6 +70,7 @@ describe('Creating product', function () {
                                     owner_id: user._id
                                 }).save(function(err, ing) {
                                     if (err) throw err;
+                                    IdIng[1] = ing._id;
                                     done();
                                 })
                             })
@@ -94,7 +97,7 @@ describe('Creating product', function () {
             picture: 'my_product.jpg',
             description: 'My product',
             brand: "Sodebo",
-            ings: ["Patate", "Tomate"],
+            ings: [IdIng[0], IdIng[1]],
             values: 30
         };
         request(url)
@@ -110,7 +113,7 @@ describe('Creating product', function () {
                 res.body.should.have.property("picture", "my_product.jpg");
                 res.body.should.have.property("description", "My product");
                 res.body.should.have.property("brand", "Sodebo");
-                res.body.should.have.property("ings", ["Patate", "Tomate"]);
+                res.body.should.have.property("ings");
                 res.body.should.have.property("values", 30);
                 res.body.should.have.property("owner", IdUser.toString());
                 done();
@@ -174,7 +177,7 @@ describe('Creating product', function () {
                 if (err) {
                     throw err;
                 }
-                token = JSON.parse(res.text);
+                token = JSON.parse(res.text).token;
                 var product = {
                     token: token,
                     name: "MyProduct",

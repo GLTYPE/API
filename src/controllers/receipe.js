@@ -61,8 +61,8 @@ exports.getReceipeByName = function getReceipeByName(req, res) {
 exports.getReceipeByCriteria = function getReceipeByCriteria(req, res) {
     Receipe.find({
         name: new RegExp(req.params.name, "i"),
-        values: { $gte: req.params.minCal, $lte: req.params.maxCal},
-        rate: { $gte: req.params.rateMin, $lte: req.params.rateMax}
+        values: { $gte: req.params.minCal, $lte: req.params.maxCal}
+        //rate: { $gte: req.params.rateMin, $lte: req.params.rateMax}
     }, function (err, receipe) {
         if (err) {
             console.log(err);

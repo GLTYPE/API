@@ -71,8 +71,8 @@ exports.getProductByIngredientName = function GetProductByProductName(req, res) 
 exports.getProductByCriteria = function getProductByCriteria(req, res) {
     Product.find({
         name: new RegExp(req.params.name, "i"),
-        values: { $gte: req.params.minCal, $lte: req.params.maxCal},
-        rate: { $gte: req.params.rateMin, $lte: req.params.rateMax}
+        values: { $gte: req.params.minCal, $lte: req.params.maxCal}
+        //rate: { $gte: req.params.rateMin, $lte: req.params.rateMax}
     }, function (err, product) {
         if (err) {
             console.log(err);

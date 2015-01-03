@@ -1,6 +1,6 @@
 // INGREDIENT CONTROLLER
 
-var Moment = require('../models/ingredient.js').Ingredient,
+var Moment = require('../models/moment.js').Moment,
     AccessToken = require('../auth/ControllerAccessToken.js');
 
 

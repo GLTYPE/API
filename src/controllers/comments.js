@@ -1,7 +1,7 @@
 // COMMENT CONTROLLER
 
 var Comment = require('../models/comment.js').Comment,
-    AccessToken = require('../auth/Comment.js');
+    AccessToken = require('../auth/ControllerAccessToken.js');
 
 
 exports.createComment = function createComment(req, res) {

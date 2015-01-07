@@ -19,6 +19,7 @@ Receipe = require('./controllers/receipe.js');
 Ingredient = require('./controllers/ingredient.js');
 User = require('./controllers/user.js');
 Moment = require('./controllers/moment.js');
+Comment = require('./controllers/comment.js');
 
 // Routes
 app.get('/', function(req, res) { res.end("Welcome to the API"); });
@@ -57,6 +58,14 @@ app.get('/moments/owner/:id', Moment.getMomentByOwnerId);
 app.get('/moments/target/:id', Moment.getMomentByTargetId);
 app.put('/moments/:id', Moment.editMoment);
 app.delete('/moments/:id', Moment.removeMoment);
+
+app.post('/comments', Comment.createComment);
+app.get('/comments', Comment.getAllComments);
+app.get('/comments/:id', Comment.getCommentById);
+app.get('/comments/owner/:id', Comment.getCommentByOwnerId);
+app.get('/comments/target/:id', Comment.getCommentByTargetId);
+app.put('/comments/:id', Comment.editComment);
+app.delete('/comments/:id', Comment.removeComment);
 
 app.post('/users', User.createUser);
 //app.get('/users', User.getAllUsers);

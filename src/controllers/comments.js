@@ -1,108 +1,110 @@
-// MOMENT CONTROLLER
+// COMMENT CONTROLLER
 
-var Moment = require('../models/moment.js').Moment,
-    AccessToken = require('../auth/ControllerAccessToken.js');
+var Comment = require('../models/comment.js').Comment,
+    AccessToken = require('../auth/Comment.js');
 
 
-exports.createMoment = function createMoment(req, res) {
+exports.createComment = function createComment(req, res) {
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        if (!req.body.name || req.body.name.length == 0)
-            return res.status(400).end("name missing.");
+        if (!req.body.owner_id)
+            return res.status(400).end("owner_id missing.");
+        if (!req.body.target_id)
+            return res.status(400).end("target_id missing.");
+        if (!req.body.comment || req.body.comment.length == 0)
+            return res.status(400).end("target_id missing.");
         if (!req.body.date || req.body.date.length == 0)
             return res.status(400).end("date missing.");
-        if (!req.body.description || req.body.description.length == 0)
-            return res.status(400).end("description missing.");
-        Moment({
+        Comment({
             name: req.body.name,
             description: req.body.description,
             owner_id: user._id,
             target_id: req.body.target_id ? req.body.target_id : user._id,
             date: req.body.date
-        }).save(function (err, mom) {
+        }).save(function (err, com) {
             if (err) {
                 console.log(err);
                 return res.status(500).end("Internal error");
             }
-            res.status(201).json(mom);
+            res.status(201).json(com);
         });
     });
 }
 
-exports.getAllMoments = function GetAllMoments(req, res) {
-    Moment.find(function (err, mom) {
+exports.getAllComments = function GetAllComments(req, res) {
+    Comment.find(function (err, com) {
         if (err) {
             console.log(err);
             return res.status(500).send("Internal error");
         }
-        res.status(200).send(mom);
+        res.status(200).send(com);
     });
 }
 
-exports.getMomentById = function GetMomentById(req, res) {
-    Moment.findById(req.params.id, function (err, mom) {
-        if (err) {
-            if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
-            console.log(err);
-            return res.status(500).send("Internal error");
-        }
-        res.status(200).send(mom);
-    });
-}
-
-exports.getMomentByOwnerId = function GetMomentByOwnerId(req, res) {
-    Moment.find({owner_id: req.params.id}, function (err, mom) {
+exports.getCommentById = function GetCommentById(req, res) {
+    Comment.findById(req.params.id, function (err, com) {
         if (err) {
             if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
             console.log(err);
             return res.status(500).send("Internal error");
         }
-        res.status(200).send(mom);
+        res.status(200).send(com);
     });
 }
 
-exports.getMomentByTargetId = function GetMomentByTargetId(req, res) {
-    Moment.find({target_id: req.params.id}, function (err, mom) {
+exports.getCommentByOwnerId = function GetCommentByOwnerId(req, res) {
+    Comment.find({owner_id: req.params.id}, function (err, com) {
         if (err) {
             if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
             console.log(err);
             return res.status(500).send("Internal error");
         }
-        res.status(200).send(mom);
+        res.status(200).send(com);
     });
 }
 
-exports.editMoment = function editMoment(req, res) {
+exports.getCommentByTargetId = function GetCommentByTargetId(req, res) {
+    Comment.find({$and: [ {target_id: req.params.id}, {type:req.params.type}]}, function (err, com) {
+        if (err) {
+            if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+            console.log(err);
+            return res.status(500).send("Internal error");
+        }
+        res.status(200).send(com);
+    });
+}
+
+exports.editComment = function editComment(req, res) {
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        Moment.findById(req.params.id, function (err, mom) {
+        Comment.findById(req.params.id, function (err, com) {
             if (err) {
                 if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
-            if (user._id != mom.owner_id) return res.status(401).end("Not your moment");
-            mom.name = req.body.name ? req.body.name : mom.name;
-            mom.date = req.body.date ? req.body.date : mom.date;
-            mom.description = req.body.description ? req.body.description : mom.description;
-            mom.save(function (err, mom) {
+            if (user._id != com.owner_id) return res.status(401).end("Not your comment");
+            com.name = req.body.name ? req.body.name : com.name;
+            com.date = req.body.date ? req.body.date : com.date;
+            com.description = req.body.description ? req.body.description : com.description;
+            com.save(function (err, com) {
                 if (err) {
                     console.log(err);
                     return res.status(400).send("Internal error");
                 }
-                res.status(200).json(mom);
+                res.status(200).json(com);
             });
         });
     });
 }
 
-exports.removeMoment = function removeMoment(req, res) {
+exports.removeComment = function removeComment(req, res) {
     AccessToken.userActionWithToken(req.body.token, res, function (user) {
-        Moment.findById(req.params.id, function (err, mom) {
+        Comment.findById(req.params.id, function (err, com) {
             if (err) {
                 if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
-            if (user._id != mom.owner_id) return res.status(401).end("Not your moment");
+            if (user._id != com.owner_id) return res.status(401).end("Not your comment");
             Ingredient.remove({_id: req.body.id}, function (err) {
                 if (err) {
                     if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");

@@ -6,7 +6,8 @@ var MomentSchema = new mongoose.Schema({
     owner_id: mongoose.Schema.Types.ObjectId,
     target_id: mongoose.Schema.Types.ObjectId,
     date: Date,
-    description: String
+    description: String,
+    comments: [mongoose.Schema.Types.ObjectId]
 });
 
 var Moment = mongoose.model('Moment', MomentSchema);

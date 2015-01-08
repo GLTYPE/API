@@ -66,7 +66,7 @@ exports.getUserByEmail = function getUserByEmail(req, res) {
 exports.getUserById = function getUserById(req, res) {
     User.findById(req.params.id, function (err, user) {
         if (err) {
-            if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+            if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
             console.log(err);
             return res.status(500).end("Internal error");
         }

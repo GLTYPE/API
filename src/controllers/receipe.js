@@ -80,7 +80,7 @@ exports.editReceipe = function editReceipe(req, res) {
             return res.status(401).end("Not a gastronomist");
         Receipe.findById(req.params.id, function (err, rec) {
             if (err) {
-                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
                 console.log(err);
                 return res.status(500).end("Internal error");
             }
@@ -106,7 +106,7 @@ exports.removeReceipe = function removeReceipe(req, res) {
             return res.status(401).end("Not a gastronomist");
         Receipe.remove({_id: rec._id}, function (err) {
             if (err) {
-                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
                 console.log(err);
                 return res.status(500).send("Internal error");
             }

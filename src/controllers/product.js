@@ -40,7 +40,7 @@ exports.getAllProduct = function GetAllProduct(req, res) {
 exports.getProductById = function GetProductById(req, res) {
     Product.findById(req.params.id, function (err, product) {
         if (err) {
-            if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+            if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
             console.log(err);
             return res.status(500).end("Internal error");
         }
@@ -88,7 +88,7 @@ exports.editProduct = function editProduct(req, res) {
             return res.status(401).end("Not a food supplier");
         Product.findById(req.params.id, function (err, prod) {
             if (err) {
-                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
                 console.log(err);
                 return res.status(500).end("Internal error");
             }
@@ -115,7 +115,7 @@ exports.removeProduct = function removeProduct(req, res) {
             return res.status(401).end("Not a food supplier");
         Product.remove({_id: req.params.id}, function (err) {
             if (err) {
-                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
                 console.log(err);
                 return res.status(500).send("Internal error");
             }

@@ -68,7 +68,7 @@ app.put('/comments/:id', Comment.editComment);
 app.delete('/comments/:id', Comment.removeComment);
 
 app.post('/users', User.createUser);
-//app.get('/users', User.getAllUsers);
+app.get('/users', User.getAllUsers);
 app.get('/users/token/:token', User.getActualUser);
 app.get('/users/:id', User.getUserById);
 app.get('/users/mail/:email', User.getUserByEmail);

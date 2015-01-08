@@ -41,7 +41,7 @@ exports.getAllIngredients = function GetAllIngredients(req, res) {
 exports.getIngredientById = function GetIngredientById(req, res) {
     Ingredient.findById(req.params.id, function (err, ingredient) {
         if (err) {
-            if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+            if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
             console.log(err);
             return res.status(500).send("Internal error");
         }
@@ -87,7 +87,7 @@ exports.editIngredient = function editIngredient(req, res) {
             return res.status(401).end("Not a gastronomist");
         Ingredient.findById(req.params.id, function (err, ing) {
             if (err) {
-                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
@@ -114,7 +114,7 @@ exports.removeIngredient = function removeIngredient(req, res) {
             return res.status(401).end("Not a gastronomist");
         Ingredient.remove({_id: req.body.id}, function (err) {
             if (err) {
-                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
+                if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid id");
                 console.log(err);
                 return res.status(500).send("Internal error");
             }

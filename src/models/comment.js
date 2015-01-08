@@ -6,7 +6,6 @@ var CommentSchema = new mongoose.Schema({
     target_id: mongoose.Schema.Types.ObjectId,
     date: Date,
     comment: String,
-    owner_pic: String,
     type: String
 });
 

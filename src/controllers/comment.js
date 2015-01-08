@@ -18,7 +18,6 @@ exports.createComment = function createComment(req, res) {
             req.body.type != "receipe")
             return res.status(400).end("wrong type missing.");
         Comment({
-            name: req.body.name,
             comment: req.body.comment,
             owner_id: user._id,
             target_id: req.body.target_id,

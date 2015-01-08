@@ -19,6 +19,7 @@ exports.createMoment = function createMoment(req, res) {
             description: req.body.description,
             owner_id: user._id,
             target_id: req.body.target_id ? req.body.target_id : user._id,
+            picture: req.body.picture ? req.body.picture : "",
             date: req.body.date
         }).save(function (err, mom) {
             if (err) {

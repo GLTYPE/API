@@ -7,6 +7,7 @@ var MomentSchema = new mongoose.Schema({
     target_id: mongoose.Schema.Types.ObjectId,
     date: Date,
     description: String,
+    picture: String,
     comments: [mongoose.Schema.Types.ObjectId]
 });
 

@@ -52,7 +52,7 @@ exports.getCommentById = function GetCommentById(req, res) {
 }
 
 exports.getCommentByOwnerId = function GetCommentByOwnerId(req, res) {
-    Comment.find({owner_id: req.params.id}, function (err, com) {
+    Comment.find({$and: [ {owner_id: req.params.id}, {type:req.params.type}]}, function (err, com) {
         if (err) {
             if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
             console.log(err);
@@ -81,7 +81,7 @@ exports.editComment = function editComment(req, res) {
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
-            if (user._id != com.owner_id) return res.status(401).end("Not your comment");
+            if (user._id.toString() != com.owner_id.toString()) return res.status(401).end("Not your moment");
             com.name = req.body.name ? req.body.name : com.name;
             com.date = req.body.date ? req.body.date : com.date;
             com.description = req.body.description ? req.body.description : com.description;
@@ -104,8 +104,8 @@ exports.removeComment = function removeComment(req, res) {
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
-            if (user._id != com.owner_id) return res.status(401).end("Not your comment");
-            Ingredient.remove({_id: req.body.id}, function (err) {
+            if (user._id.toString() != com.owner_id.toString()) return res.status(401).end("Not your moment");
+            Comment.remove({_id: req.body.id}, function (err) {
                 if (err) {
                     if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
                     console.log(err);

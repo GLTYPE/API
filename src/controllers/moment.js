@@ -79,7 +79,7 @@ exports.editMoment = function editMoment(req, res) {
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
-            if (user._id != mom.owner_id) return res.status(401).end("Not your moment");
+            if (user._id.toString() != mom.owner_id.toString()) return res.status(401).end("Not your moment");
             mom.name = req.body.name ? req.body.name : mom.name;
             mom.date = req.body.date ? req.body.date : mom.date;
             mom.description = req.body.description ? req.body.description : mom.description;
@@ -102,8 +102,8 @@ exports.removeMoment = function removeMoment(req, res) {
                 console.log(err);
                 return res.status(500).send("Internal error");
             }
-            if (user._id != mom.owner_id) return res.status(401).end("Not your moment");
-            Ingredient.remove({_id: req.body.id}, function (err) {
+            if (user._id.toString() != mom.owner_id.toString()) return res.status(401).end("Not your moment");
+            Moment.remove({_id: req.body.id}, function (err) {
                 if (err) {
                     if (err.message.search("Cast to ObjectId") != -1) return res.status(400).end("Invalid token");
                     console.log(err);

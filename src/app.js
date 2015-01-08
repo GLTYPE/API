@@ -11,7 +11,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Mongodb config
-mongoose.connect('mongodb://localhost/test_in');
+mongoose.connect('mongodb://localhost/dev_nourriture');
 
 // Controllers
 Product = require('./controllers/product.js'),
@@ -62,8 +62,8 @@ app.delete('/moments/:id', Moment.removeMoment);
 app.post('/comments', Comment.createComment);
 app.get('/comments', Comment.getAllComments);
 app.get('/comments/:id', Comment.getCommentById);
-app.get('/comments/owner/:id', Comment.getCommentByOwnerId);
-app.get('/comments/target/:id', Comment.getCommentByTargetId);
+app.get('/comments/owner/:id/type/:type', Comment.getCommentByOwnerId);
+app.get('/comments/target/:id/type/:type', Comment.getCommentByTargetId);
 app.put('/comments/:id', Comment.editComment);
 app.delete('/comments/:id', Comment.removeComment);
 

@@ -2,6 +2,7 @@
 
 var Moment = require('../models/moment.js').Moment,
     User = require('../models/user.js').User,
+    ModelComment = require('../models/comment.js').Comment,
     Comment = require('../controllers/comment.js'),
     AccessToken = require('../auth/ControllerAccessToken.js');
 
@@ -54,10 +55,8 @@ exports.getAllMoments = function GetAllMoments(req, res) {
                     var coms = [];
                     if (comments.length == 0) {
                         ret.push({moment: m, comments: null, user: user});
-                        if (mom.length == i + 1) {
-                            console.log(JSON.stringify(ret, 4, null))
+                        if (mom.length == i + 1)
                             return res.status(200).send(ret);
-                        }
                     }
                     else
                         comments.forEach(function(c, j) {
@@ -127,10 +126,8 @@ exports.getMomentByTargetId = function GetMomentByTargetId(req, res) {
                     var coms = [];
                     if (comments.length == 0) {
                         ret.push({moment: m, comments: null, user: user});
-                        if (mom.length == i + 1) {
-                            console.log(JSON.stringify(ret, 4, null))
+                        if (mom.length == i + 1)
                             return res.status(200).send(ret);
-                        }
                     }
                     else
                         comments.forEach(function(c, j) {
@@ -193,6 +190,7 @@ exports.removeMoment = function removeMoment(req, res) {
                     console.log(err);
                     return res.status(500).send("Internal error");
                 }
+                ModelComment.remove({target_id: req.body.id}, {multi: true});
                 res.status(204).end();
             });
         });

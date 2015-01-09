@@ -72,10 +72,8 @@ exports.getAllMoments = function GetAllMoments(req, res) {
                                 coms.push({comment:c, user:userCom});
                                 if (comments.length == j + 1)
                                     ret.push({moment:m, comments:coms, user:user});
-                                if (comments.length == j + 1 && mom.length == i + 1) {
-                                    console.log(JSON.stringify(ret, 4, null))
+                                if (comments.length == j + 1 && mom.length == i + 1)
                                     return res.status(200).send(ret);
-                                }
                             })
                         })
                 })
@@ -147,10 +145,8 @@ exports.getMomentByTargetId = function GetMomentByTargetId(req, res) {
                                 coms.push({comment:c, user:userCom});
                                 if (comments.length == j + 1)
                                     ret.push({moment:m, comments:coms, user:user});
-                                if (comments.length == j + 1 && mom.length == i + 1) {
-                                    console.log(JSON.stringify(ret, 4, null))
+                                if (comments.length == j + 1 && mom.length == i + 1)
                                     return res.status(200).send(ret);
-                                }
                             })
                         })
                 })
